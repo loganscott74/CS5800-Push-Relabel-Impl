@@ -272,6 +272,22 @@ public:
     int getMaxFlow() {
         return getMaxFlow(0, std::prev(nodes.end())->second.num);
     }
+    
+    /// Displays the max flow and the resulting graph
+    friend std::ostream& operator<<(std::ostream& out, PushRelabel& pr) {
+        out << "------------------------------" << endl;
+        cout << "Max flow: " << pr.getMaxFlow() << endl;
+        for (auto nn = pr.nodes.begin(); nn != pr.nodes.end(); ++nn) {
+            out << "---------------" << endl;
+            out << "-- " << nn->second.num << " --" << endl << "h=" << nn->second.height << ", ef=" << nn->second.ef << endl;
+            for (auto e = pr.edges.at(nn->second).begin(); e != pr.edges.at(nn->second).end(); ++e) {
+                out << nn->second.num << "----->" << e->to.num << ":" << endl
+                << "C=" << e->capacity << ", F=" << e->flow << endl << endl;
+            }
+        }
+        out << "------------------------------" << endl;
+        return out;
+    }
 };
 
 int main(int argc, const char * argv[]) {
@@ -299,7 +315,30 @@ int main(int argc, const char * argv[]) {
         //cout << line << endl;
         pr.addEdge(from, to, c);
     }
+    cout << pr << endl;
     
-    cout << "Max flow: " << pr.getMaxFlow() << endl;
+    /*
+     Default example:
+     0, 1, 16
+     0, 2, 13
+     2, 1, 4
+     1, 2, 10
+     1, 3, 12
+     3, 2, 9
+     2, 4, 14
+     4, 3, 7
+     3, 5,20
+     4, 5, 4
+     
+     Another example:
+     0, 1, 10
+     0, 2, 12
+     1, 3, 15
+     2, 1, 5
+     2, 4, 6
+     3, 4, 8
+     3, 5, 3
+     4, 5, 17
+     */
     return 0;
 }
